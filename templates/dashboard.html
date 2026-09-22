@@ -12,15 +12,19 @@
             <div>
                 <p class="eyebrow">SMART HOUSE MONITORING SYSTEM</p>
                 <h1>Home dashboard</h1>
-                <p class="subtitle">Live status is currently shown with sample data.</p>
+                <p class="subtitle">Current readings from the Firebase Realtime Database.</p>
             </div>
-            <div class="connection-status"><span></span> Local demo mode</div>
+            <div class="connection-status {% if firebase_error %}connection-error{% endif %}"><span></span> {{ "Firebase needs setup" if firebase_error else "Firebase connected" }}</div>
         </header>
+
+        {% if firebase_error %}
+        <p class="firebase-message" role="alert">{{ firebase_error }}</p>
+        {% endif %}
 
         <section aria-labelledby="sensor-heading">
             <div class="section-heading">
                 <h2 id="sensor-heading">Sensor readings</h2>
-                <p>Placeholder values until the ESP32 is connected.</p>
+                <p>Values are stored in Firebase. The ESP32 will update them later.</p>
             </div>
             <div class="sensor-grid">
                 <article class="card sensor-card">
@@ -54,15 +58,15 @@
             <div class="controls-grid">
                 <article class="card control-card">
                     <div><h3>Lights</h3><p>Living room lights</p></div>
-                    <button class="toggle-button" type="button" aria-pressed="false">Off</button>
+                    <button class="toggle-button {% if device_data.light %}is-on{% endif %}" type="button" data-device="light" aria-pressed="{{ device_data.light | lower }}">{{ "On" if device_data.light else "Off" }}</button>
                 </article>
                 <article class="card control-card">
                     <div><h3>Fan</h3><p>Cooling fan</p></div>
-                    <button class="toggle-button" type="button" aria-pressed="false">Off</button>
+                    <button class="toggle-button {% if device_data.fan %}is-on{% endif %}" type="button" data-device="fan" aria-pressed="{{ device_data.fan | lower }}">{{ "On" if device_data.fan else "Off" }}</button>
                 </article>
                 <article class="card control-card alarm-card">
                     <div><h3>Alarm</h3><p>Security alarm</p></div>
-                    <button class="toggle-button alarm-button" type="button" aria-pressed="false">Off</button>
+                    <button class="toggle-button alarm-button {% if device_data.alarm %}is-on{% endif %}" type="button" data-device="alarm" aria-pressed="{{ device_data.alarm | lower }}">{{ "On" if device_data.alarm else "Off" }}</button>
                 </article>
             </div>
         </section>

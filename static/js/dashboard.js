@@ -1,4 +1,3 @@
-// Visual-only controls for Phase 1. Later, these can send commands to Flask/ESP32.
 const controlButtons = document.querySelectorAll(".toggle-button");
 const updatedTime = document.querySelector("#updated-time");
 
@@ -10,11 +9,31 @@ function showUpdateTime() {
 }
 
 controlButtons.forEach((button) => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
         const isOn = button.getAttribute("aria-pressed") === "true";
-        button.setAttribute("aria-pressed", String(!isOn));
-        button.classList.toggle("is-on", !isOn);
-        button.textContent = isOn ? "Off" : "On";
-        showUpdateTime();
+        const enabled = !isOn;
+
+        button.disabled = true;
+        try {
+            const response = await fetch(`/api/devices/${button.dataset.device}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ enabled }),
+            });
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || "Device update failed.");
+            }
+
+            button.setAttribute("aria-pressed", String(enabled));
+            button.classList.toggle("is-on", enabled);
+            button.textContent = enabled ? "On" : "Off";
+            showUpdateTime();
+        } catch (error) {
+            window.alert(error.message);
+        } finally {
+            button.disabled = false;
+        }
     });
 });

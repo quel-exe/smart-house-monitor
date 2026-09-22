@@ -31,6 +31,9 @@ h3 { margin: 0 0 6px; }
 .subtitle, .section-heading p, .control-card p, .card-note { margin: 0; }
 .connection-status { background: var(--primary-soft); color: #1d4ed8; padding: 10px 14px; border-radius: 999px; font-size: 0.9rem; white-space: nowrap; }
 .connection-status span { display: inline-block; width: 8px; height: 8px; background: var(--success); border-radius: 50%; margin-right: 6px; }
+.connection-status.connection-error { background: #fef2f2; color: #991b1b; }
+.connection-status.connection-error span { background: var(--danger); }
+.firebase-message { margin: -20px 0 28px; border: 1px solid #fecaca; border-radius: 10px; background: #fef2f2; color: #991b1b; padding: 12px 14px; }
 .section-heading { margin: 28px 0 16px; }
 .section-heading p { margin-top: 6px; }
 .sensor-grid, .controls-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
