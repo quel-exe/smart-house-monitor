@@ -1,0 +1,2 @@
+# smart-house-monitor
+EMBEDDED SYSTEMS MIDTERM MINI PROJECT
