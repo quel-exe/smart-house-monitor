@@ -71,6 +71,17 @@
             </div>
         </section>
 
+        <section class="thingspeak-section" aria-labelledby="thingspeak-heading">
+            <div>
+                <h2 id="thingspeak-heading">ThingSpeak history</h2>
+                <p>Send the current Firebase sensor values to your ThingSpeak channel.</p>
+            </div>
+            <div>
+                <button class="send-reading-button" id="send-reading-button" type="button">Send current reading</button>
+                <p class="send-status" id="send-status" aria-live="polite"></p>
+            </div>
+        </section>
+
         <p class="updated-text">Dashboard updated: <span id="updated-time">Just now</span></p>
     </main>
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>

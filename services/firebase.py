@@ -60,6 +60,13 @@ def get_house_data():
                 "fan": devices.get("fan", False),
                 "alarm": devices.get("alarm", False),
             },
+            # Keep the original Firebase values available for other services.
+            "raw_sensors": {
+                "temperature": sensors.get("temperature"),
+                "humidity": sensors.get("humidity"),
+                "pir": sensors.get("pir"),
+                "motion": sensors.get("motion"),
+            },
             "error": None,
         }
     except Exception as error:

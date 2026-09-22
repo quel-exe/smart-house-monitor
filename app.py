@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, render_template, request
 
 from services.firebase import FirebaseError, get_house_data, set_device_state
+from services.thingspeak import ThingSpeakError, send_sensor_reading
 
 
 app = Flask(__name__)
@@ -33,6 +34,21 @@ def update_device(device_name):
         return jsonify({"error": str(error)}), 500
 
     return jsonify({"device": device_name, "enabled": enabled})
+
+
+@app.post("/api/thingspeak/update")
+def update_thingspeak():
+    """Copy the current Firebase sensor reading to ThingSpeak history."""
+    house_data = get_house_data()
+    if house_data["error"]:
+        return jsonify({"error": house_data["error"]}), 503
+
+    try:
+        result = send_sensor_reading(house_data["raw_sensors"])
+    except ThingSpeakError as error:
+        return jsonify({"error": str(error)}), 502
+
+    return jsonify(result), 200
 
 
 if __name__ == "__main__":
