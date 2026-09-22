@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart House Monitor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <main class="dashboard-container">
+        <header class="page-header">
+            <div>
+                <p class="eyebrow">SMART HOUSE MONITORING SYSTEM</p>
+                <h1>Home dashboard</h1>
+                <p class="subtitle">Live status is currently shown with sample data.</p>
+            </div>
+            <div class="connection-status"><span></span> Local demo mode</div>
+        </header>
+
+        <section aria-labelledby="sensor-heading">
+            <div class="section-heading">
+                <h2 id="sensor-heading">Sensor readings</h2>
+                <p>Placeholder values until the ESP32 is connected.</p>
+            </div>
+            <div class="sensor-grid">
+                <article class="card sensor-card">
+                    <p class="card-label">Temperature</p>
+                    <p class="sensor-value">{{ sensor_data.temperature }}<span>°C</span></p>
+                    <p class="card-note">DHT sensor</p>
+                </article>
+                <article class="card sensor-card">
+                    <p class="card-label">Humidity</p>
+                    <p class="sensor-value">{{ sensor_data.humidity }}<span>%</span></p>
+                    <p class="card-note">DHT sensor</p>
+                </article>
+                <article class="card sensor-card">
+                    <p class="card-label">Human presence</p>
+                    <p class="status-value" id="presence-value">{{ sensor_data.presence }}</p>
+                    <p class="card-note">PIR sensor</p>
+                </article>
+                <article class="card sensor-card">
+                    <p class="card-label">Motion</p>
+                    <p class="status-value" id="motion-value">{{ sensor_data.motion }}</p>
+                    <p class="card-note">Motion sensor</p>
+                </article>
+            </div>
+        </section>
+
+        <section aria-labelledby="controls-heading">
+            <div class="section-heading">
+                <h2 id="controls-heading">Device controls</h2>
+                <p>These are visual placeholders for future actuators.</p>
+            </div>
+            <div class="controls-grid">
+                <article class="card control-card">
+                    <div><h3>Lights</h3><p>Living room lights</p></div>
+                    <button class="toggle-button" type="button" aria-pressed="false">Off</button>
+                </article>
+                <article class="card control-card">
+                    <div><h3>Fan</h3><p>Cooling fan</p></div>
+                    <button class="toggle-button" type="button" aria-pressed="false">Off</button>
+                </article>
+                <article class="card control-card alarm-card">
+                    <div><h3>Alarm</h3><p>Security alarm</p></div>
+                    <button class="toggle-button alarm-button" type="button" aria-pressed="false">Off</button>
+                </article>
+            </div>
+        </section>
+
+        <p class="updated-text">Dashboard updated: <span id="updated-time">Just now</span></p>
+    </main>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
