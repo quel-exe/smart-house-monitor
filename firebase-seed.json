@@ -1,0 +1,14 @@
+{
+  "sensors": {
+    "temperature": 27.4,
+    "humidity": 68,
+    "pir": false,
+    "ldr": 740
+  },
+  "devices": {
+    "inside_light": false,
+    "door_servo": false,
+    "motion_led": false,
+    "outside_light": false
+  }
+}

@@ -36,10 +36,15 @@ def get_house_data():
         "sensors": {
             "temperature": "--",
             "humidity": "--",
-            "presence": "Unknown",
             "motion": "Unknown",
+            "light_level": "--",
         },
-        "devices": {"light": False, "fan": False, "alarm": False},
+        "devices": {
+            "inside_light": False,
+            "door_servo": False,
+            "motion_led": False,
+            "outside_light": False,
+        },
         "error": None,
     }
 
@@ -52,20 +57,21 @@ def get_house_data():
             "sensors": {
                 "temperature": sensors.get("temperature", "--"),
                 "humidity": sensors.get("humidity", "--"),
-                "presence": "Human detected" if sensors.get("pir") else "No one detected",
-                "motion": "Motion detected" if sensors.get("motion") else "No motion",
+                "motion": "Motion detected" if sensors.get("pir") else "No motion",
+                "light_level": sensors.get("ldr", "--"),
             },
             "devices": {
-                "light": devices.get("light", False),
-                "fan": devices.get("fan", False),
-                "alarm": devices.get("alarm", False),
+                "inside_light": devices.get("inside_light", False),
+                "door_servo": devices.get("door_servo", False),
+                "motion_led": devices.get("motion_led", False),
+                "outside_light": devices.get("outside_light", False),
             },
             # Keep the original Firebase values available for other services.
             "raw_sensors": {
                 "temperature": sensors.get("temperature"),
                 "humidity": sensors.get("humidity"),
                 "pir": sensors.get("pir"),
-                "motion": sensors.get("motion"),
+                "ldr": sensors.get("ldr"),
             },
             "error": None,
         }
@@ -76,7 +82,9 @@ def get_house_data():
 
 def set_device_state(device_name, enabled):
     """Write one supported device state to Firebase."""
-    allowed_devices = {"light", "fan", "alarm"}
+    # The PIR, servo, movement indicator, and exterior light are automatic.
+    # Only the interior LED is controlled by the dashboard's light switch.
+    allowed_devices = {"inside_light"}
     if device_name not in allowed_devices:
         raise FirebaseError("Unknown device.")
 

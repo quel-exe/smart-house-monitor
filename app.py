@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, render_template, request
 
 from services.firebase import FirebaseError, get_house_data, set_device_state
-from services.thingspeak import ThingSpeakError, send_sensor_reading
+from services.thingspeak import ThingSpeakError, get_sensor_history, send_sensor_reading
 
 
 app = Flask(__name__)
@@ -49,6 +49,23 @@ def update_thingspeak():
         return jsonify({"error": str(error)}), 502
 
     return jsonify(result), 200
+
+
+@app.get("/api/thingspeak/history")
+def thingspeak_history():
+    """Return recent ThingSpeak readings for the dashboard charts and table."""
+    try:
+        results = int(request.args.get("results", 20))
+    except ValueError:
+        return jsonify({"error": "The results value must be a number."}), 400
+
+    if not 1 <= results <= 100:
+        return jsonify({"error": "The results value must be between 1 and 100."}), 400
+
+    try:
+        return jsonify(get_sensor_history(results))
+    except ThingSpeakError as error:
+        return jsonify({"error": str(error)}), 502
 
 
 if __name__ == "__main__":
