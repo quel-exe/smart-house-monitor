@@ -1,209 +1,462 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Smart House Monitoring System - Live sensor readings and device controls powered by Firebase Realtime Database.">
+    <meta name="description" content="Smart House Monitoring System - live sensor readings, device controls, and historical data.">
     <title>Smart House Monitor</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
 <body>
 
-    <!-- â”€â”€â”€ Theme Toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-    <div class="theme-toggle-wrap" aria-label="Toggle light/dark mode">
-        <span class="theme-toggle-label" id="theme-toggle-label">Dark</span>
-        <label class="theme-toggle-track" for="theme-toggle-input" aria-label="Switch theme">
-            <input type="checkbox" id="theme-toggle-input" role="switch" aria-checked="false">
-            <span class="theme-toggle-thumb" aria-hidden="true">&#9790;</span>
-        </label>
-    </div>
+    <!-- ═══════════════════════════════════════════════════════════
+         TOP NAVIGATION BAR
+    ════════════════════════════════════════════════════════════ -->
+    <nav class="top-nav" role="navigation" aria-label="Main navigation">
 
-    <main class="dashboard-container">
-
-        <!-- â”€â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-        <header class="page-header">
-            <div>
-                <p class="eyebrow">Smart House Monitoring System</p>
-                <h1>Home dashboard</h1>
-                <p class="subtitle">Current readings from the Firebase Realtime Database.</p>
+        <!-- ─ Brand / Home Button ─ -->
+        <button class="nav-brand" data-view="view-home" aria-label="Go to home dashboard">
+            <div class="nav-logo" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
             </div>
-            <div class="connection-status {% if firebase_error %}connection-error{% endif %}"><span></span> {{ "Firebase
-                needs setup" if firebase_error else "Firebase connected" }}</div>
-        </header>
+            <span class="nav-title">SmartHome</span>
+        </button>
 
-        {% if firebase_error %}
-        <p class="firebase-message" role="alert">{{ firebase_error }}</p>
-        {% endif %}
+        <!-- ─ Nav Tabs ─ -->
+        <div class="nav-tabs" role="tablist" aria-label="Dashboard sections">
 
-        <!-- â”€â”€â”€ Sensor Readings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-        <section aria-labelledby="sensor-heading">
-            <div class="section-heading">
-                <h2 id="sensor-heading">Sensor readings</h2>
-                <p>Values are stored in Firebase. The ESP32 will update them later.</p>
-            </div>
-                        <div class="sensor-grid">
-
-                <article class="card sensor-card">
-                    <div class="sensor-icon" aria-hidden="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
-                        </svg>
-                    </div>
-                    <p class="card-label">Temperature</p>
-                    <p class="sensor-value">{{ sensor_data.temperature }}<span>&deg;C</span></p>
-                    <p class="card-note">DHT11 sensor</p>
-                </article>
-
-                <article class="card sensor-card">
-                    <div class="sensor-icon" aria-hidden="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
-                        </svg>
-                    </div>
-                    <p class="card-label">Humidity</p>
-                    <p class="sensor-value">{{ sensor_data.humidity }}<span>%</span></p>
-                    <p class="card-note">DHT11 sensor</p>
-                </article>
-
-                <article class="card sensor-card">
-                    <div class="sensor-icon" aria-hidden="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                        </svg>
-                    </div>
-                    <p class="card-label">Door motion</p>
-                    <p class="status-value">{{ sensor_data.motion }}</p>
-                    <p class="card-note">PIR sensor &middot; servo: {{ "Open" if device_data.door_servo else "Closed" }} &middot; indicator: {{ "On" if device_data.motion_led else "Off" }}</p>
-                </article>
-
-                <article class="card sensor-card">
-                    <div class="sensor-icon" aria-hidden="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="5"/>
-                            <line x1="12" y1="1" x2="12" y2="3"/>
-                            <line x1="12" y1="21" x2="12" y2="23"/>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                            <line x1="1" y1="12" x2="3" y2="12"/>
-                            <line x1="21" y1="12" x2="23" y2="12"/>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                        </svg>
-                    </div>
-                    <p class="card-label">Outdoor light</p>
-                    <p class="sensor-value">{{ sensor_data.light_level }}</p>
-                    <p class="card-note">LDR sensor &middot; exterior LED: {{ "On" if device_data.outside_light else "Off" }}</p>
-                </article>
-
-            </div>
-        </section>
-
-        <!-- â”€â”€â”€ Device Controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-        <section aria-labelledby="controls-heading">
-            <div class="section-heading">
-                <h2 id="controls-heading">Device controls</h2>
-                <p>Control the indoor LED with the house light switch.</p>
-            </div>
-            <div class="controls-grid">
-                <article class="card control-card">
-                    <div>
-                        <h3>Indoor light</h3>
-                        <p>Manual LED light switch</p>
-                    </div>
-                    <button class="toggle-button {% if device_data.inside_light %}is-on{% endif %}" type="button"
-                        data-device="inside_light" aria-pressed="{{ device_data.inside_light | lower }}">{{ "On" if
-                        device_data.inside_light else "Off" }}</button>
-                </article>
-            </div>
-        </section>
-
-        <!-- â”€â”€â”€ ThingSpeak Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-        <section class="thingspeak-section" aria-labelledby="thingspeak-heading">
-            <div>
-                <h2 id="thingspeak-heading">ThingSpeak history</h2>
-                <p>Recent readings are loaded from your ThingSpeak channel.</p>
-            </div>
-            <div>
-                <button class="send-reading-button" id="send-reading-button" type="button">Send current reading</button>
-                <p class="send-status" id="send-status" aria-live="polite"></p>
-            </div>
-        </section>
-
-        <!-- â”€â”€â”€ Sensor History â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-        <section aria-labelledby="history-heading">
-            <div class="section-heading history-heading">
-                <div>
-                    <h2 id="history-heading">Sensor history</h2>
-                    <p>Latest 20 readings stored in ThingSpeak.</p>
+            <!-- Home tab -->
+            <button class="nav-tab active" id="tab-home"
+                    role="tab" data-view="view-home"
+                    aria-selected="true" aria-controls="view-home">
+                <div class="nav-tab__tile" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+                    </svg>
                 </div>
-                <button class="refresh-history-button" id="refresh-history-button" type="button">Refresh
-                    history</button>
-            </div>
-            <p class="history-status" id="history-status" aria-live="polite">Loading ThingSpeak historyâ€¦</p>
-            <div class="history-chart-grid" id="history-charts" hidden>
-                <article class="card history-chart-card">
-                    <h3>Temperature</h3><canvas id="temperature-chart" aria-label="Temperature history chart"
-                        role="img"></canvas>
-                </article>
-                <article class="card history-chart-card">
-                    <h3>Humidity</h3><canvas id="humidity-chart" aria-label="Humidity history chart"
-                        role="img"></canvas>
-                </article>
-                <article class="card history-chart-card">
-                    <h3>PIR motion</h3><canvas id="motion-chart" aria-label="PIR motion history chart"
-                        role="img"></canvas>
-                </article>
-                <article class="card history-chart-card">
-                    <h3>LDR light level</h3><canvas id="light-level-chart" aria-label="LDR light-level history chart"
-                        role="img"></canvas>
-                </article>
-            </div>
-            <div class="history-table-wrap" id="history-table-wrap" hidden>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>Temperature</th>
-                            <th>Humidity</th>
-                            <th>PIR</th>
-                            <th>LDR</th>
-                        </tr>
-                    </thead>
-                    <tbody id="history-table-body"></tbody>
-                </table>
-            </div>
-        </section>
+                <span>Home</span>
+            </button>
 
-        <p class="updated-text">Dashboard updated: <span id="updated-time">Just now</span></p>
+            <!-- Controls tab -->
+            <button class="nav-tab" id="tab-controls"
+                    role="tab" data-view="view-controls"
+                    aria-selected="false" aria-controls="view-controls">
+                <div class="nav-tab__tile" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <line x1="4" y1="21" x2="4" y2="14"/>
+                        <line x1="4" y1="10" x2="4" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12" y2="3"/>
+                        <line x1="20" y1="21" x2="20" y2="16"/>
+                        <line x1="20" y1="12" x2="20" y2="3"/>
+                        <line x1="1" y1="14" x2="7" y2="14"/>
+                        <line x1="9" y1="8" x2="15" y2="8"/>
+                        <line x1="17" y1="16" x2="23" y2="16"/>
+                    </svg>
+                </div>
+                <span>Controls</span>
+            </button>
+
+            <!-- History tab -->
+            <button class="nav-tab" id="tab-history"
+                    role="tab" data-view="view-history"
+                    aria-selected="false" aria-controls="view-history">
+                <div class="nav-tab__tile" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <line x1="18" y1="20" x2="18" y2="10"/>
+                        <line x1="12" y1="20" x2="12" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="14"/>
+                        <line x1="2" y1="20" x2="22" y2="20"/>
+                    </svg>
+                </div>
+                <span>History</span>
+            </button>
+
+        </div>
+
+        <!-- ─ Theme Toggle (moon / sun SVGs) ─ -->
+        <div class="nav-actions">
+            <label class="theme-toggle-track" for="theme-toggle-input"
+                   aria-label="Toggle light / dark mode" title="Toggle theme">
+                <input type="checkbox" id="theme-toggle-input" role="switch" aria-checked="false">
+                <span class="theme-toggle-thumb" aria-hidden="true">
+                    <!-- Moon icon (dark mode default) -->
+                    <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                    <!-- Sun icon (light mode) -->
+                    <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="4"/>
+                        <line x1="12" y1="2" x2="12" y2="5"/>
+                        <line x1="12" y1="19" x2="12" y2="22"/>
+                        <line x1="2" y1="12" x2="5" y2="12"/>
+                        <line x1="19" y1="12" x2="22" y2="12"/>
+                        <line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/>
+                        <line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/>
+                        <line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/>
+                        <line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/>
+                    </svg>
+                </span>
+            </label>
+        </div>
+
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         MAIN CONTENT
+    ════════════════════════════════════════════════════════════ -->
+    <main class="main-content">
+
+        <!-- ── VIEW 1: HOME ──────────────────────────────────── -->
+        <div class="view" id="view-home"
+             role="tabpanel" aria-labelledby="tab-home">
+
+            <!-- Compact page header + Firebase badge -->
+            <header class="page-header page-header--row">
+                <div>
+                    <h1>Home dashboard</h1>
+                    <p class="page-sub">Current readings from the Firebase Realtime Database.</p>
+                </div>
+                <div class="connection-status {% if firebase_error %}connection-error{% endif %}">
+                    <span></span>
+                    {{ "Firebase needs setup" if firebase_error else "Firebase connected" }}
+                </div>
+            </header>
+
+            {% if firebase_error %}
+            <p class="firebase-message" role="alert">{{ firebase_error }}</p>
+            {% endif %}
+
+            <!-- 4 Sensor Cards -->
+            <section aria-label="Sensor readings">
+                <div class="sensor-grid">
+
+                    <!-- Temperature -->
+                    <article class="card sensor-card" id="card-temperature">
+                        <div class="sensor-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                            </svg>
+                        </div>
+                        <p class="card-label">Temperature</p>
+                        <p class="sensor-value">{{ sensor_data.temperature }}<span>&deg;C</span></p>
+                        <p class="card-note">DHT11 sensor</p>
+                    </article>
+
+                    <!-- Humidity -->
+                    <article class="card sensor-card" id="card-humidity">
+                        <div class="sensor-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                            </svg>
+                        </div>
+                        <p class="card-label">Humidity</p>
+                        <p class="sensor-value">{{ sensor_data.humidity }}<span>%</span></p>
+                        <p class="card-note">DHT11 sensor</p>
+                    </article>
+
+                    <!-- Door Motion -->
+                    <article class="card sensor-card" id="card-door-motion">
+                        <div class="sensor-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                            </svg>
+                        </div>
+                        <p class="card-label">Door motion</p>
+                        <p class="status-value">{{ sensor_data.motion }}</p>
+                        <p class="card-note">PIR sensor &middot; servo: {{ "Open" if device_data.door_servo else "Closed" }} &middot; indicator: {{ "On" if device_data.motion_led else "Off" }}</p>
+                    </article>
+
+                    <!-- Outdoor Light -->
+                    <article class="card sensor-card" id="card-outdoor-light">
+                        <div class="sensor-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M9 18h6m-4 4h2m-5-8.5a7 7 0 1 1 8 0c-.8 1-1.5 2-1.5 3.5h-5c0-1.5-.7-2.5-1.5-3.5z"/>
+                                <line x1="12" y1="2" x2="12" y2="4"/>
+                                <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/>
+                                <line x1="19.07" y1="4.93" x2="17.66" y2="6.34"/>
+                                <line x1="2" y1="12" x2="4" y2="12"/>
+                                <line x1="20" y1="12" x2="22" y2="12"/>
+                            </svg>
+                        </div>
+                        <p class="card-label">Outdoor light</p>
+                        <p class="sensor-value">{{ sensor_data.light_level }}</p>
+                        <p class="card-note">LDR sensor &middot; exterior LED: {{ "On" if device_data.outside_light else "Off" }}</p>
+                    </article>
+
+                </div>
+            </section>
+
+            <p class="updated-text">Updated: <span id="updated-time">Just now</span></p>
+
+        </div>
+
+        <!-- ── VIEW 2: CONTROLS ──────────────────────────────── -->
+        <div class="view" id="view-controls"
+             role="tabpanel" aria-labelledby="tab-controls" hidden>
+
+            <header class="page-header">
+                <h1>Device controls</h1>
+                <p class="page-sub">Control the indoor LED and smart hardware.</p>
+            </header>
+
+            <!-- Indoor light toggle -->
+            <section aria-labelledby="controls-heading">
+                <div class="section-heading">
+                    <h2 id="controls-heading">Indoor devices</h2>
+                </div>
+                <div class="controls-grid">
+                    <article class="card control-card" id="card-indoor-light">
+                        <div class="control-card__info">
+                            <div class="sensor-icon control-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M9 18h6m-4 4h2m-5-8.5a7 7 0 1 1 8 0c-.8 1-1.5 2-1.5 3.5h-5c0-1.5-.7-2.5-1.5-3.5z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3>Indoor light</h3>
+                                <p>Manual LED light switch</p>
+                            </div>
+                        </div>
+                        <button class="toggle-button {% if device_data.inside_light %}is-on{% endif %}"
+                                type="button"
+                                data-device="inside_light"
+                                aria-pressed="{{ device_data.inside_light | lower }}">
+                            {{ "On" if device_data.inside_light else "Off" }}
+                        </button>
+                    </article>
+                </div>
+            </section>
+
+            <!-- ThingSpeak send card -->
+            <section class="thingspeak-section" aria-labelledby="thingspeak-heading">
+                <div>
+                    <h2 id="thingspeak-heading">ThingSpeak</h2>
+                    <p>Push current Firebase readings to your channel.</p>
+                </div>
+                <div>
+                    <!-- Send icon: paper-plane -->
+                    <button class="send-reading-button" id="send-reading-button" type="button">
+                        <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <line x1="22" y1="2" x2="11" y2="13"/>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
+                        Send reading
+                    </button>
+                    <p class="send-status" id="send-status" aria-live="polite"></p>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ── VIEW 3: HISTORY ───────────────────────────────── -->
+        <div class="view" id="view-history"
+             role="tabpanel" aria-labelledby="tab-history" hidden>
+
+            <!-- Page header with inline circular refresh button -->
+            <header class="page-header page-header--row">
+                <div>
+                    <h1>Sensor history</h1>
+                    <p class="page-sub">Latest 20 readings stored in ThingSpeak.</p>
+                </div>
+                <!-- Circular refresh icon button -->
+                <button class="circ-btn" id="refresh-history-button"
+                        type="button" title="Refresh history" aria-label="Refresh history">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <polyline points="23 4 23 10 17 10"/>
+                        <polyline points="1 20 1 14 7 14"/>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                    </svg>
+                </button>
+            </header>
+
+            <section aria-labelledby="history-section-label">
+                <h2 id="history-section-label" style="display:none">Historical data</h2>
+
+                <p class="history-status" id="history-status" aria-live="polite">
+                    Loading ThingSpeak history&hellip;
+                </p>
+
+                <!-- 2x2 Chart Grid -->
+                <div class="history-chart-grid" id="history-charts" hidden>
+                    <article class="card history-chart-card">
+                        <h3>Temperature</h3>
+                        <canvas id="temperature-chart" aria-label="Temperature history chart" role="img"></canvas>
+                    </article>
+                    <article class="card history-chart-card">
+                        <h3>Humidity</h3>
+                        <canvas id="humidity-chart" aria-label="Humidity history chart" role="img"></canvas>
+                    </article>
+                    <article class="card history-chart-card">
+                        <h3>PIR motion</h3>
+                        <canvas id="motion-chart" aria-label="PIR motion history chart" role="img"></canvas>
+                    </article>
+                    <article class="card history-chart-card">
+                        <h3>LDR light level</h3>
+                        <canvas id="light-level-chart" aria-label="LDR light-level history chart" role="img"></canvas>
+                    </article>
+                </div>
+
+                <!-- Data Table -->
+                <div class="history-table-wrap" id="history-table-wrap" hidden>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Temperature</th>
+                                <th>Humidity</th>
+                                <th>PIR</th>
+                                <th>LDR</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
 
     </main>
 
+    <!-- dashboard.js loads first so its selectors exist before inline scripts -->
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
     <script>
-        // â”€â”€ Theme toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        const themeInput = document.getElementById('theme-toggle-input');
-        const themeLabel = document.getElementById('theme-toggle-label');
-        const html = document.documentElement;
+        /* ── Tab / View Switching ─────────────────────────────── */
+        (function () {
+            var navTabs  = Array.from(document.querySelectorAll('.nav-tab'));
+            var views    = Array.from(document.querySelectorAll('.view'));
+            var brandBtn = document.querySelector('.nav-brand[data-view]');
 
-        // Restore persisted preference
-        const savedTheme = localStorage.getItem('smh-theme') || 'dark';
-        html.setAttribute('data-theme', savedTheme);
-        if (savedTheme === 'light') {
-            themeInput.checked = true;
-            themeLabel.textContent = 'Light';
-        }
+            function switchToView(targetId) {
+                views.forEach(function (v) { v.hidden = (v.id !== targetId); });
+                navTabs.forEach(function (t) {
+                    var active = t.dataset.view === targetId;
+                    t.classList.toggle('active', active);
+                    t.setAttribute('aria-selected', String(active));
+                });
+                if (targetId === 'view-history') {
+                    requestAnimationFrame(function () { window.dispatchEvent(new Event('resize')); });
+                }
+                sessionStorage.setItem('smh-tab', targetId);
+            }
 
-        themeInput.addEventListener('change', () => {
-            const next = themeInput.checked ? 'light' : 'dark';
-            html.setAttribute('data-theme', next);
-            themeLabel.textContent = next.charAt(0).toUpperCase() + next.slice(1);
-            localStorage.setItem('smh-theme', next);
-            themeInput.setAttribute('aria-checked', String(themeInput.checked));
-        });
+            navTabs.forEach(function (tab) {
+                tab.addEventListener('click', function () { switchToView(tab.dataset.view); });
+            });
+
+            if (brandBtn) {
+                brandBtn.addEventListener('click', function () { switchToView(brandBtn.dataset.view); });
+            }
+
+            var saved = sessionStorage.getItem('smh-tab') || 'view-home';
+            switchToView(saved);
+        })();
+
+        /* ── Theme Toggle (moon / sun) ────────────────────────── */
+        (function () {
+            var themeInput = document.getElementById('theme-toggle-input');
+            var html       = document.documentElement;
+
+            var saved = localStorage.getItem('smh-theme') || 'dark';
+            html.setAttribute('data-theme', saved);
+            if (saved === 'light') {
+                themeInput.checked = true;
+                themeInput.setAttribute('aria-checked', 'true');
+            }
+
+            themeInput.addEventListener('change', function () {
+                var next = themeInput.checked ? 'light' : 'dark';
+                html.setAttribute('data-theme', next);
+                themeInput.setAttribute('aria-checked', String(themeInput.checked));
+                localStorage.setItem('smh-theme', next);
+            });
+        })();
+
+        /* ── Reactive Visual Animations & Status Observers ──────── */
+        (function initReactiveSensors() {
+            function evaluateSensorCard(card) {
+                if (!card) return;
+                var text = (card.textContent || '').trim();
+
+                // 1. Light Status: Outdoor Light & Indoor Light
+                var isOutdoorLight = card.id === 'card-outdoor-light' || text.includes('Outdoor light') || text.includes('exterior LED');
+                var isIndoorLight  = card.id === 'card-indoor-light' || card.classList.contains('control-card');
+
+                if (isOutdoorLight || isIndoorLight) {
+                    var isLightOn = false;
+                    var toggleBtn = card.querySelector('.toggle-button');
+
+                    if (toggleBtn) {
+                        isLightOn = toggleBtn.classList.contains('is-on') ||
+                                    toggleBtn.getAttribute('aria-pressed') === 'true' ||
+                                    toggleBtn.textContent.trim().toLowerCase() === 'on';
+                    }
+
+                    if (isOutdoorLight) {
+                        isLightOn = /exterior led:\s*on/i.test(text) || /\bled:?\s*on\b/i.test(text);
+                    }
+
+                    card.classList.toggle('status-active', isLightOn);
+                    card.classList.toggle('light-glowing', isLightOn);
+                    card.classList.toggle('light-off', !isLightOn);
+                }
+
+                // 2. Door Motion & Servo Status
+                var isDoorMotion = card.id === 'card-door-motion' || text.includes('Door motion') || text.includes('PIR sensor');
+                if (isDoorMotion) {
+                    var hasMotion = /motion detected|detected/i.test(text) && !/no motion/i.test(text);
+                    var isServoOpen = /servo:\s*open/i.test(text);
+                    var isMotionLedOn = /indicator:\s*on/i.test(text);
+                    var isMotionActive = hasMotion || isServoOpen || isMotionLedOn;
+
+                    card.classList.toggle('status-active', isMotionActive);
+                    card.classList.toggle('motion-alert', isMotionActive);
+                    card.classList.toggle('motion-calm', !isMotionActive);
+                }
+            }
+
+            function updateAllCards() {
+                var cards = document.querySelectorAll('.sensor-card, .control-card');
+                cards.forEach(evaluateSensorCard);
+            }
+
+            // Run on initial load
+            updateAllCards();
+
+            // Attach MutationObservers to observe any dynamic text or attribute changes from Firebase
+            var cards = document.querySelectorAll('.sensor-card, .control-card');
+            cards.forEach(function (card) {
+                var observer = new MutationObserver(function () {
+                    evaluateSensorCard(card);
+                });
+                observer.observe(card, {
+                    characterData: true,
+                    childList: true,
+                    subtree: true,
+                    attributes: true,
+                    attributeFilter: ['class', 'aria-pressed']
+                });
+            });
+
+            // Listen on button clicks for immediate feedback
+            document.querySelectorAll('.toggle-button').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    setTimeout(updateAllCards, 50);
+                    setTimeout(updateAllCards, 250);
+                });
+            });
+
+            // Periodic heartbeat in case DOM is updated via innerHTML
+            setInterval(updateAllCards, 2000);
+        })();
     </script>
-</body>
 
+</body>
 </html>
