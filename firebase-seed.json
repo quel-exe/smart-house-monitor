@@ -6,7 +6,11 @@
     "ldr": 740
   },
   "devices": {
-    "inside_light": false,
+    "room_1_light": false,
+    "room_2_light": false,
+    "room_3_light": false,
+    "room_4_light": false,
+    "room_5_light": false,
     "door_servo": false,
     "motion_led": false,
     "outside_light": false

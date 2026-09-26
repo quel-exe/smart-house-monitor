@@ -53,12 +53,28 @@
         <section aria-labelledby="controls-heading">
             <div class="section-heading">
                 <h2 id="controls-heading">Device controls</h2>
-                <p>Control the indoor LED with the house light switch.</p>
+                <p>Control each room LED manually. The motion and outdoor LEDs are automatic.</p>
             </div>
             <div class="controls-grid">
                 <article class="card control-card">
-                    <div><h3>Indoor light</h3><p>Manual LED light switch</p></div>
-                    <button class="toggle-button {% if device_data.inside_light %}is-on{% endif %}" type="button" data-device="inside_light" aria-pressed="{{ device_data.inside_light | lower }}">{{ "On" if device_data.inside_light else "Off" }}</button>
+                    <div><h3>Room 1 light</h3><p>Manual LED light switch</p></div>
+                    <button class="toggle-button {% if device_data.room_1_light %}is-on{% endif %}" type="button" data-device="room_1_light" aria-pressed="{{ device_data.room_1_light | lower }}">{{ "On" if device_data.room_1_light else "Off" }}</button>
+                </article>
+                <article class="card control-card">
+                    <div><h3>Room 2 light</h3><p>Manual LED light switch</p></div>
+                    <button class="toggle-button {% if device_data.room_2_light %}is-on{% endif %}" type="button" data-device="room_2_light" aria-pressed="{{ device_data.room_2_light | lower }}">{{ "On" if device_data.room_2_light else "Off" }}</button>
+                </article>
+                <article class="card control-card">
+                    <div><h3>Room 3 light</h3><p>Manual LED light switch</p></div>
+                    <button class="toggle-button {% if device_data.room_3_light %}is-on{% endif %}" type="button" data-device="room_3_light" aria-pressed="{{ device_data.room_3_light | lower }}">{{ "On" if device_data.room_3_light else "Off" }}</button>
+                </article>
+                <article class="card control-card">
+                    <div><h3>Room 4 light</h3><p>Manual LED light switch</p></div>
+                    <button class="toggle-button {% if device_data.room_4_light %}is-on{% endif %}" type="button" data-device="room_4_light" aria-pressed="{{ device_data.room_4_light | lower }}">{{ "On" if device_data.room_4_light else "Off" }}</button>
+                </article>
+                <article class="card control-card">
+                    <div><h3>Room 5 light</h3><p>Manual LED light switch</p></div>
+                    <button class="toggle-button {% if device_data.room_5_light %}is-on{% endif %}" type="button" data-device="room_5_light" aria-pressed="{{ device_data.room_5_light | lower }}">{{ "On" if device_data.room_5_light else "Off" }}</button>
                 </article>
             </div>
         </section>
