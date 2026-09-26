@@ -1,4 +1,9 @@
 from flask import Flask, jsonify, render_template, request
+from dotenv import load_dotenv
+
+# Load local development credentials before the Firebase and ThingSpeak helpers
+# read their environment variables.  The .env file is ignored by Git.
+load_dotenv()
 
 from services.firebase import FirebaseError, get_house_data, set_device_state
 from services.thingspeak import ThingSpeakError, get_sensor_history, send_sensor_reading
