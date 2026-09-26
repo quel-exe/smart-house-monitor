@@ -1,55 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Smart House Monitoring System - Live sensor readings and device controls powered by Firebase Realtime Database.">
     <title>Smart House Monitor</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
+
+    <!-- â”€â”€â”€ Theme Toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <div class="theme-toggle-wrap" aria-label="Toggle light/dark mode">
+        <span class="theme-toggle-label" id="theme-toggle-label">Dark</span>
+        <label class="theme-toggle-track" for="theme-toggle-input" aria-label="Switch theme">
+            <input type="checkbox" id="theme-toggle-input" role="switch" aria-checked="false">
+            <span class="theme-toggle-thumb" aria-hidden="true">&#9790;</span>
+        </label>
+    </div>
+
     <main class="dashboard-container">
+
+        <!-- â”€â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <header class="page-header">
             <div>
-                <p class="eyebrow">SMART HOUSE MONITORING SYSTEM</p>
+                <p class="eyebrow">Smart House Monitoring System</p>
                 <h1>Home dashboard</h1>
                 <p class="subtitle">Current readings from the Firebase Realtime Database.</p>
             </div>
-            <div class="connection-status {% if firebase_error %}connection-error{% endif %}"><span></span> {{ "Firebase needs setup" if firebase_error else "Firebase connected" }}</div>
+            <div class="connection-status {% if firebase_error %}connection-error{% endif %}"><span></span> {{ "Firebase
+                needs setup" if firebase_error else "Firebase connected" }}</div>
         </header>
 
         {% if firebase_error %}
         <p class="firebase-message" role="alert">{{ firebase_error }}</p>
         {% endif %}
 
+        <!-- â”€â”€â”€ Sensor Readings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <section aria-labelledby="sensor-heading">
             <div class="section-heading">
                 <h2 id="sensor-heading">Sensor readings</h2>
                 <p>Values are stored in Firebase. The ESP32 will update them later.</p>
             </div>
-            <div class="sensor-grid">
+                        <div class="sensor-grid">
+
                 <article class="card sensor-card">
+                    <div class="sensor-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                        </svg>
+                    </div>
                     <p class="card-label">Temperature</p>
-                    <p class="sensor-value">{{ sensor_data.temperature }}<span>°C</span></p>
+                    <p class="sensor-value">{{ sensor_data.temperature }}<span>&deg;C</span></p>
                     <p class="card-note">DHT11 sensor</p>
                 </article>
+
                 <article class="card sensor-card">
+                    <div class="sensor-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                        </svg>
+                    </div>
                     <p class="card-label">Humidity</p>
                     <p class="sensor-value">{{ sensor_data.humidity }}<span>%</span></p>
                     <p class="card-note">DHT11 sensor</p>
                 </article>
+
                 <article class="card sensor-card">
+                    <div class="sensor-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                    </div>
                     <p class="card-label">Door motion</p>
                     <p class="status-value">{{ sensor_data.motion }}</p>
-                    <p class="card-note">PIR sensor · servo: {{ "Open" if device_data.door_servo else "Closed" }} · indicator: {{ "On" if device_data.motion_led else "Off" }}</p>
+                    <p class="card-note">PIR sensor &middot; servo: {{ "Open" if device_data.door_servo else "Closed" }} &middot; indicator: {{ "On" if device_data.motion_led else "Off" }}</p>
                 </article>
+
                 <article class="card sensor-card">
+                    <div class="sensor-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"/>
+                            <line x1="12" y1="1" x2="12" y2="3"/>
+                            <line x1="12" y1="21" x2="12" y2="23"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                            <line x1="1" y1="12" x2="3" y2="12"/>
+                            <line x1="21" y1="12" x2="23" y2="12"/>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                        </svg>
+                    </div>
                     <p class="card-label">Outdoor light</p>
                     <p class="sensor-value">{{ sensor_data.light_level }}</p>
-                    <p class="card-note">LDR sensor · exterior LED: {{ "On" if device_data.outside_light else "Off" }}</p>
+                    <p class="card-note">LDR sensor &middot; exterior LED: {{ "On" if device_data.outside_light else "Off" }}</p>
                 </article>
+
             </div>
         </section>
 
+        <!-- â”€â”€â”€ Device Controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <section aria-labelledby="controls-heading">
             <div class="section-heading">
                 <h2 id="controls-heading">Device controls</h2>
@@ -57,12 +109,18 @@
             </div>
             <div class="controls-grid">
                 <article class="card control-card">
-                    <div><h3>Indoor light</h3><p>Manual LED light switch</p></div>
-                    <button class="toggle-button {% if device_data.inside_light %}is-on{% endif %}" type="button" data-device="inside_light" aria-pressed="{{ device_data.inside_light | lower }}">{{ "On" if device_data.inside_light else "Off" }}</button>
+                    <div>
+                        <h3>Indoor light</h3>
+                        <p>Manual LED light switch</p>
+                    </div>
+                    <button class="toggle-button {% if device_data.inside_light %}is-on{% endif %}" type="button"
+                        data-device="inside_light" aria-pressed="{{ device_data.inside_light | lower }}">{{ "On" if
+                        device_data.inside_light else "Off" }}</button>
                 </article>
             </div>
         </section>
 
+        <!-- â”€â”€â”€ ThingSpeak Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <section class="thingspeak-section" aria-labelledby="thingspeak-heading">
             <div>
                 <h2 id="thingspeak-heading">ThingSpeak history</h2>
@@ -74,31 +132,78 @@
             </div>
         </section>
 
+        <!-- â”€â”€â”€ Sensor History â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <section aria-labelledby="history-heading">
             <div class="section-heading history-heading">
                 <div>
                     <h2 id="history-heading">Sensor history</h2>
                     <p>Latest 20 readings stored in ThingSpeak.</p>
                 </div>
-                <button class="refresh-history-button" id="refresh-history-button" type="button">Refresh history</button>
+                <button class="refresh-history-button" id="refresh-history-button" type="button">Refresh
+                    history</button>
             </div>
-            <p class="history-status" id="history-status" aria-live="polite">Loading ThingSpeak history…</p>
+            <p class="history-status" id="history-status" aria-live="polite">Loading ThingSpeak historyâ€¦</p>
             <div class="history-chart-grid" id="history-charts" hidden>
-                <article class="card history-chart-card"><h3>Temperature</h3><canvas id="temperature-chart" aria-label="Temperature history chart" role="img"></canvas></article>
-                <article class="card history-chart-card"><h3>Humidity</h3><canvas id="humidity-chart" aria-label="Humidity history chart" role="img"></canvas></article>
-                <article class="card history-chart-card"><h3>PIR motion</h3><canvas id="motion-chart" aria-label="PIR motion history chart" role="img"></canvas></article>
-                <article class="card history-chart-card"><h3>LDR light level</h3><canvas id="light-level-chart" aria-label="LDR light-level history chart" role="img"></canvas></article>
+                <article class="card history-chart-card">
+                    <h3>Temperature</h3><canvas id="temperature-chart" aria-label="Temperature history chart"
+                        role="img"></canvas>
+                </article>
+                <article class="card history-chart-card">
+                    <h3>Humidity</h3><canvas id="humidity-chart" aria-label="Humidity history chart"
+                        role="img"></canvas>
+                </article>
+                <article class="card history-chart-card">
+                    <h3>PIR motion</h3><canvas id="motion-chart" aria-label="PIR motion history chart"
+                        role="img"></canvas>
+                </article>
+                <article class="card history-chart-card">
+                    <h3>LDR light level</h3><canvas id="light-level-chart" aria-label="LDR light-level history chart"
+                        role="img"></canvas>
+                </article>
             </div>
             <div class="history-table-wrap" id="history-table-wrap" hidden>
                 <table>
-                    <thead><tr><th>Time</th><th>Temperature</th><th>Humidity</th><th>PIR</th><th>LDR</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Temperature</th>
+                            <th>Humidity</th>
+                            <th>PIR</th>
+                            <th>LDR</th>
+                        </tr>
+                    </thead>
                     <tbody id="history-table-body"></tbody>
                 </table>
             </div>
         </section>
 
         <p class="updated-text">Dashboard updated: <span id="updated-time">Just now</span></p>
+
     </main>
+
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script>
+        // â”€â”€ Theme toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        const themeInput = document.getElementById('theme-toggle-input');
+        const themeLabel = document.getElementById('theme-toggle-label');
+        const html = document.documentElement;
+
+        // Restore persisted preference
+        const savedTheme = localStorage.getItem('smh-theme') || 'dark';
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'light') {
+            themeInput.checked = true;
+            themeLabel.textContent = 'Light';
+        }
+
+        themeInput.addEventListener('change', () => {
+            const next = themeInput.checked ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            themeLabel.textContent = next.charAt(0).toUpperCase() + next.slice(1);
+            localStorage.setItem('smh-theme', next);
+            themeInput.setAttribute('aria-checked', String(themeInput.checked));
+        });
+    </script>
 </body>
+
 </html>
