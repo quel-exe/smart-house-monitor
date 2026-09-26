@@ -416,9 +416,18 @@ h3 { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); margin: 0
     transition: stroke 0.22s ease;
 }
 
-/* Pressed inset + glow only on hover */
-.sensor-card:hover .sensor-icon { box-shadow: var(--neu-in-sm), 0 0 12px var(--accent-glow); transform: scale(0.95); }
-.sensor-card:hover .sensor-icon svg { stroke: var(--accent-color); }
+/* Pressed inset + cyan glow only on hover */
+.sensor-card:hover .sensor-icon,
+.control-card:hover .control-icon,
+.sensor-icon:hover {
+    box-shadow: var(--neu-in-sm), 0 0 14px var(--accent-glow) !important;
+    transform: scale(0.95);
+}
+.sensor-card:hover .sensor-icon svg,
+.control-card:hover .control-icon svg,
+.sensor-icon:hover svg {
+    stroke: var(--accent-color) !important;
+}
 
 .card-label {
     font-size: 0.63rem;
@@ -492,20 +501,14 @@ h3 { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); margin: 0
     box-shadow: var(--neu-out), 0 0 22px rgba(255, 215, 0, 0.10);
 }
 
-/* Light OFF state: recessed socket with zero glow */
-.card.light-off .sensor-icon,
-.card.light-off .control-icon {
-    box-shadow: var(--neu-in-sm);
-    background: var(--bg-color);
-    color: var(--text-subtle);
-    border: 1px solid rgba(255, 255, 255, 0.02);
-    animation: none;
+.card.light-glowing:hover .sensor-icon,
+.card.light-glowing:hover .control-icon {
+    box-shadow: var(--neu-in-sm), 0 0 24px rgba(255, 215, 0, 0.85) !important;
+    color: #fff176 !important;
 }
-
-.card.light-off .sensor-icon svg,
-.card.light-off .control-icon svg {
-    stroke: var(--text-subtle);
-    filter: none;
+.card.light-glowing:hover .sensor-icon svg,
+.card.light-glowing:hover .control-icon svg {
+    stroke: #fff176 !important;
 }
 
 /* 2. Door Motion & Servo Radar Pulse */
@@ -550,18 +553,12 @@ h3 { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); margin: 0
     box-shadow: var(--neu-out), 0 0 22px rgba(34, 211, 164, 0.10);
 }
 
-/* Motion calm / Closed state: calm inset gray indicator icon */
-.card.motion-calm .sensor-icon {
-    box-shadow: var(--neu-in-sm);
-    background: var(--bg-color);
-    color: var(--text-subtle);
-    border: 1px solid rgba(255, 255, 255, 0.02);
-    animation: none;
+.card.motion-alert:hover .sensor-icon {
+    box-shadow: var(--neu-in-sm), 0 0 20px rgba(34, 211, 164, 0.85) !important;
+    color: #22d3a4 !important;
 }
-
-.card.motion-calm .sensor-icon svg {
-    stroke: var(--text-subtle);
-    filter: none;
+.card.motion-alert:hover .sensor-icon svg {
+    stroke: #22d3a4 !important;
 }
 
 /* ── Neumorphic Toggle Button ────────────────────────────────── */
