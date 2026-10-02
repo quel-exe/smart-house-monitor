@@ -62,7 +62,7 @@ function drawChart(canvasId, values, color) {
     const xFor = (index) => padding.left + (values.length === 1 ? chartWidth / 2 : (index / (values.length - 1)) * chartWidth);
     const yFor = (value) => padding.top + ((maximum - value) / (maximum - minimum)) * chartHeight;
 
-    context.strokeStyle = "#e2e8f0";
+    context.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--border").trim() || "#e2e8f0";
     context.lineWidth = 1;
     for (let step = 0; step <= 2; step += 1) {
         const y = padding.top + (step / 2) * chartHeight;
@@ -212,4 +212,14 @@ refreshHistoryButton.addEventListener("click", loadHistory);
 window.addEventListener("resize", () => {
     if (historyFeeds.length) renderHistory(historyFeeds);
 });
-loadHistory();
+
+// Lazy-load history only when the History tab is first visited.
+let historyLoaded = false;
+document.querySelectorAll(".nav-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+        if (tab.dataset.view === "view-history" && !historyLoaded) {
+            historyLoaded = true;
+            loadHistory();
+        }
+    });
+});

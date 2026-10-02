@@ -49,6 +49,12 @@ def get_house_data():
             "motion_led": False,
             "outside_light": False,
         },
+        "raw_sensors": {
+            "temperature": None,
+            "humidity": None,
+            "pir": None,
+            "ldr": None,
+        },
         "error": None,
     }
 
