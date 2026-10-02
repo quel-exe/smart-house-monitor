@@ -206,16 +206,20 @@
 
             <header class="page-header">
                 <h1>Device controls</h1>
-                <p class="page-sub">Control the indoor LED and smart hardware.</p>
+                <p class="page-sub">Control each room LED manually. Motion and outdoor LEDs are automatic.</p>
             </header>
 
-            <!-- Indoor light toggle -->
+            <!-- Room light controls (room_1 – room_5) -->
             <section aria-labelledby="controls-heading">
                 <div class="section-heading">
-                    <h2 id="controls-heading">Indoor devices</h2>
+                    <h2 id="controls-heading">Room lights</h2>
+                    <p>Control each room LED manually. The motion and outdoor LEDs are automatic.</p>
                 </div>
                 <div class="controls-grid">
-                    <article class="card control-card" id="card-indoor-light">
+
+                    {% for n in range(1, 6) %}
+                    {% set key = "room_" ~ n ~ "_light" %}
+                    <article class="card control-card" id="card-room-{{ n }}-light">
                         <div class="control-card__info">
                             <div class="sensor-icon control-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
@@ -225,17 +229,19 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3>Indoor light</h3>
+                                <h3>Room {{ n }} light</h3>
                                 <p>Manual LED light switch</p>
                             </div>
                         </div>
-                        <button class="toggle-button {% if device_data.inside_light %}is-on{% endif %}"
+                        <button class="toggle-button {% if device_data[key] %}is-on{% endif %}"
                                 type="button"
-                                data-device="inside_light"
-                                aria-pressed="{{ device_data.inside_light | lower }}">
-                            {{ "On" if device_data.inside_light else "Off" }}
+                                data-device="{{ key }}"
+                                aria-pressed="{{ device_data[key] | lower }}">
+                            {{ "On" if device_data[key] else "Off" }}
                         </button>
                     </article>
+                    {% endfor %}
+
                 </div>
             </section>
 

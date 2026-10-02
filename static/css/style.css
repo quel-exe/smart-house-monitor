@@ -1,4 +1,4 @@
-/* ================================================================
+﻿/* ================================================================
    SMART HOUSE MONITOR — Neumorphic UI v3
    Icon-centric nav + vector action buttons | Dark-mode first
    ================================================================ */
@@ -445,7 +445,7 @@ h3 { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); margin: 0
 .updated-text { margin-top: 28px; text-align: right; font-size: 0.73rem; color: var(--text-subtle); }
 
 /* ── Controls ────────────────────────────────────────────────── */
-.controls-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; margin-bottom: 20px; }
+.controls-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 20px; }
 .control-card { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
 .control-card p { font-size: 0.79rem; color: var(--text-muted); margin-top: 4px; }
 

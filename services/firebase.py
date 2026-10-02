@@ -40,7 +40,11 @@ def get_house_data():
             "light_level": "--",
         },
         "devices": {
-            "inside_light": False,
+            "room_1_light": False,
+            "room_2_light": False,
+            "room_3_light": False,
+            "room_4_light": False,
+            "room_5_light": False,
             "door_servo": False,
             "motion_led": False,
             "outside_light": False,
@@ -61,7 +65,11 @@ def get_house_data():
                 "light_level": sensors.get("ldr", "--"),
             },
             "devices": {
-                "inside_light": devices.get("inside_light", False),
+                "room_1_light": devices.get("room_1_light", False),
+                "room_2_light": devices.get("room_2_light", False),
+                "room_3_light": devices.get("room_3_light", False),
+                "room_4_light": devices.get("room_4_light", False),
+                "room_5_light": devices.get("room_5_light", False),
                 "door_servo": devices.get("door_servo", False),
                 "motion_led": devices.get("motion_led", False),
                 "outside_light": devices.get("outside_light", False),
@@ -82,9 +90,14 @@ def get_house_data():
 
 def set_device_state(device_name, enabled):
     """Write one supported device state to Firebase."""
-    # The PIR, servo, movement indicator, and exterior light are automatic.
-    # Only the interior LED is controlled by the dashboard's light switch.
-    allowed_devices = {"inside_light"}
+    # Room LEDs are manual; sensor-related devices remain automatic.
+    allowed_devices = {
+        "room_1_light",
+        "room_2_light",
+        "room_3_light",
+        "room_4_light",
+        "room_5_light",
+    }
     if device_name not in allowed_devices:
         raise FirebaseError("Unknown device.")
 
