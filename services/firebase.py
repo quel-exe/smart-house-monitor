@@ -41,7 +41,6 @@ def get_house_data():
         },
         "devices": {
             "room_1_light": False,
-            "room_2_light": False,
             "room_3_light": False,
             "room_4_light": False,
             "room_5_light": False,
@@ -72,7 +71,6 @@ def get_house_data():
             },
             "devices": {
                 "room_1_light": devices.get("room_1_light", False),
-                "room_2_light": devices.get("room_2_light", False),
                 "room_3_light": devices.get("room_3_light", False),
                 "room_4_light": devices.get("room_4_light", False),
                 "room_5_light": devices.get("room_5_light", False),
@@ -99,7 +97,6 @@ def set_device_state(device_name, enabled):
     # Room LEDs are manual; sensor-related devices remain automatic.
     allowed_devices = {
         "room_1_light",
-        "room_2_light",
         "room_3_light",
         "room_4_light",
         "room_5_light",

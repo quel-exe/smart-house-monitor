@@ -7,7 +7,7 @@ A Flask dashboard for an Embedded Systems smart-house project. Firebase stores t
 The current Flask, Firebase, and ThingSpeak integration has been tested successfully:
 
 - The dashboard reads live sensor and actuator states from Firebase.
-- The four room-light switches write their states back to Firebase.
+- The four room-light switches write their states back to Firebase. The kitchen and living room share one switch.
 - The dashboard sends a current reading to ThingSpeak on demand.
 - The dashboard loads the 20 most recent ThingSpeak readings into charts and a table.
 
@@ -85,7 +85,6 @@ Replace the placeholder data at the root of your Firebase Realtime Database with
   },
   "devices": {
     "room_1_light": false,
-    "room_2_light": false,
     "room_3_light": false,
     "room_4_light": false,
     "room_5_light": false,
@@ -96,7 +95,7 @@ Replace the placeholder data at the root of your Firebase Realtime Database with
 }
 ```
 
-`pir` is `true` when motion is detected in front of the door. At that time the ESP8266 should set `door_servo` and `motion_led` to `true`. It should set `outside_light` based on the LDR reading. `room_1_light` through `room_5_light` are manual dashboard switches.
+`pir` is `true` when motion is detected in front of the door. At that time the ESP8266 should set `door_servo` and `motion_led` to `true`. It should set `outside_light` based on the LDR reading. `room_1_light` controls the kitchen and living room together; `room_3_light` through `room_5_light` are the other manual dashboard switches.
 
 The Firebase root should contain only the `sensors` and `devices` objects above. Export the root as a backup before replacing old placeholder data.
 
@@ -137,7 +136,7 @@ The dashboard reads history through `GET /api/thingspeak/history?results=20`. It
 ## Current features
 
 - Dashboard reads DHT11 temperature/humidity, PIR motion, and LDR light level from Firebase.
-- The room-light switches write `devices/room_1_light` through `devices/room_5_light` to Firebase.
+- The room-light switches write `devices/room_1_light` and `devices/room_3_light` through `devices/room_5_light` to Firebase. `room_1_light` controls the kitchen and living room together.
 - The dashboard shows the automatic door-servo, motion-indicator LED, and exterior LED states.
 - A button and Flask route that manually copies a Firebase sensor reading to ThingSpeak.
 - ThingSpeak history charts and a timestamped table are shown in the dashboard.
@@ -147,4 +146,4 @@ The dashboard reads history through `GET /api/thingspeak/history?results=20`. It
 - Connect the DHT11, PIR, LDR, door servo, and LEDs to the ESP8266.
 - Have the ESP8266 update `sensors/temperature`, `sensors/humidity`, `sensors/pir`, and `sensors/ldr` in Firebase.
 - Add automatic, rate-limited ThingSpeak updates when new Firebase sensor values arrive.
-- Let the ESP8266 set `devices/door_servo`, `devices/motion_led`, and `devices/outside_light`; read `devices/room_1_light` through `devices/room_5_light` for the manual room LEDs.
+- Let the ESP8266 set `devices/door_servo`, `devices/motion_led`, and `devices/outside_light`; read `devices/room_1_light` (for the kitchen and living room) and `devices/room_3_light` through `devices/room_5_light` for the manual room LEDs.

@@ -209,13 +209,18 @@
 
             </header>
 
-            <!-- Room light controls (room_1 – room_5) -->
+            <!-- Room light controls. Kitchen and living room share room_1_light. -->
             <section aria-labelledby="controls-heading">
                 <div class="controls-grid">
 
-                    {% for n in range(1, 6) %}
-                    {% set key = "room_" ~ n ~ "_light" %}
-                    <article class="card control-card" id="card-room-{{ n }}-light">
+                    {% set room_lights = [
+                        ("room_1_light", "Kitchen & living room light"),
+                        ("room_3_light", "Room 3 light"),
+                        ("room_4_light", "Room 4 light"),
+                        ("room_5_light", "Room 5 light")
+                    ] %}
+                    {% for key, label in room_lights %}
+                    <article class="card control-card" id="card-{{ key }}">
                         <div class="control-card__info">
                             <div class="sensor-icon control-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
@@ -225,7 +230,7 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3>Room {{ n }} light</h3>
+                                <h3>{{ label }}</h3>
                                 <p>Manual LED light switch</p>
                             </div>
                         </div>
